@@ -22,9 +22,7 @@ export function PersonInfo() {
             GITHUB <i className="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         </PersonInfoHeader>
-        <PersonInfoDescriptonBio>
-          <p>Descricao da BIO</p>
-        </PersonInfoDescriptonBio>
+        <PersonInfoDescriptonBio>Descricao da BIO</PersonInfoDescriptonBio>
         <PersonInfoFooter>
           <span>
             <i className="fa-brands fa-github"></i>
