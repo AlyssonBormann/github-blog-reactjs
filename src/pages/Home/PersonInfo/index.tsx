@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useState } from 'react'
+import { api } from '../../../lib/axios'
 import {
   PersonInfoContainer,
   PersonInfoContent,
@@ -6,7 +8,52 @@ import {
   PersonInfoHeader,
 } from './styles'
 
+interface UserInfo {
+  name: string
+  followers: number
+  githubUsername: string
+  company: string
+  url: string
+  imgUrl: string
+  description: string
+  location: string
+}
+
 export function PersonInfo() {
+  const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo)
+
+  const fetchUserInfo = useCallback(async () => {
+    const response = await api.get('users/AlyssonBormann')
+    console.log(response.data)
+    const {
+      name,
+      followers,
+      login,
+      company,
+      html_url: htmlUrl,
+      avatar_url: avatarUrl,
+      bio,
+      location,
+    } = response.data
+
+    const user = {
+      name,
+      followers,
+      githubUsername: login,
+      company,
+      url: htmlUrl,
+      imgUrl: avatarUrl,
+      description: bio,
+      location,
+    }
+
+    setUserInfo(user)
+  }, [])
+
+  useEffect(() => {
+    fetchUserInfo()
+  }, [fetchUserInfo])
+
   return (
     <PersonInfoContainer>
       <img
@@ -17,16 +64,18 @@ export function PersonInfo() {
       />
       <PersonInfoContent>
         <PersonInfoHeader>
-          <h1>Alysson Bormann</h1>
-          <a href="" target="_blank" rel="noreferrer">
+          <h1>{userInfo.name}</h1>
+          <a href={userInfo.url} target="_blank" rel="noreferrer">
             GITHUB <i className="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         </PersonInfoHeader>
-        <PersonInfoDescriptonBio>Descricao da BIO</PersonInfoDescriptonBio>
+        <PersonInfoDescriptonBio>
+          {userInfo.description}
+        </PersonInfoDescriptonBio>
         <PersonInfoFooter>
           <span>
             <i className="fa-brands fa-github"></i>
-            Username
+            {userInfo.githubUsername}
           </span>
           <span>
             <i className="fa-solid fa-building"></i>
@@ -34,6 +83,7 @@ export function PersonInfo() {
           </span>
           <span>
             <i className="fa-solid fa-user-group"></i>
+            {userInfo.followers}
             Followers
           </span>
         </PersonInfoFooter>
